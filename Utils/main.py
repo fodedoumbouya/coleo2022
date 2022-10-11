@@ -29,6 +29,22 @@ for c in cnts:
         ((x, y), r) = cv2.minEnclosingCircle(c)
         cv2.circle(image, (int(x), int(y)), int(r), (36, 255, 12), 2)
 
+#bordure à droite
+row, col = image.shape[:2]
+bottom = image[row-2:row, 0:col]
+mean = cv2.mean(bottom)[0]
+
+bordersize = 1000
+result = cv2.copyMakeBorder(
+    image,
+    top=0,
+    bottom=0,
+    left=0,
+    right=bordersize,
+    borderType=cv2.BORDER_CONSTANT,
+    value=[mean, mean, mean]
+)
+
 # texte
 font = cv2.FONT_HERSHEY_SIMPLEX
 org = (50, 50)
@@ -38,6 +54,6 @@ thickness = 2
 cv2.putText(image, '%d recepteurs detectes'%valid, org, font, 
                    fontScale, color, thickness, cv2.LINE_AA)
 
-cv2.imshow('image', image)
+cv2.imshow('Result', result)
 cv2.imwrite('detected.png', image)
 cv2.waitKey()
