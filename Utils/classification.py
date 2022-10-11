@@ -88,7 +88,7 @@ def get_coord(img_path,MARGIN):
 
 import pathlib
 #dataset_url = ".keras\\datasets\\types recepteurs"
-training_data_dir = ".keras\\datasets\\types recepteurs"
+training_data_dir = "dataset\\types recepteurs"
 training_data_dir = pathlib.Path(training_data_dir)
 
 data_dir = "data\\1 S seabrai M\\analyse 2560x1920\\Upper"
