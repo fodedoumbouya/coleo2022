@@ -5,6 +5,18 @@ import matplotlib.image as mpimg
 import json
 
 json_path = 'trainingSet.json'
+plt.rcParams['figure.dpi'] = 300
+labels = {"autres": [238/255,59/255,59/255],
+         "coleonica": [124/255,205/255,124/255],
+         "faux": [255/255,255/255,0/255],
+         "flat": [142/255,229/255,238/255],
+         "placodea": [255/255,211/255,155/255],
+         "pore": [0/255,201/255,87/255],
+         "ringed": [255/255,110/255,180/255],
+         "roundtip": [145/255,44/255,238/255],
+         "sting": [238/255,121/255,66/255],
+         "sunken": [135/255,206/255,255/255],
+         "wrinkled": [255/255,131/255,250/255]}
 
 with open(json_path, 'r') as f:
   data = json.load(f)
@@ -18,12 +30,15 @@ def show_image(image, output):
         x = data[image][circle]['coordinates'][0]
         y = data[image][circle]['coordinates'][1]
         size = data[image][circle]['coordinates'][2]
-        circle = plt.Circle((x, y), size, color='r', fill=False)
+        label = data[image][circle]['label']
+        if label not in labels:
+            label = "autres"
+        circle = plt.Circle((x, y), size, color=labels[label], fill=False)
         ax.add_patch(circle)
     image = "../" + image
     img = mpimg.imread(image)
     plt.imshow(img,cmap='gray',vmin=0,vmax=255)
-    plt.savefig(output, dpi=300)
+    plt.savefig(output)
 
 name="output/output"
 i=0
