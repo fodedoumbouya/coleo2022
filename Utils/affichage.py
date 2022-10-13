@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import matplotlib.pyplot as plt
-import matplotlib.image as mpimg 
+import matplotlib.image as mpimg
+import matplotlib.patches as mpatches
 import json
 
 json_path = 'trainingSet.json'
@@ -35,10 +36,12 @@ def show_image(image, output):
             label = "autres"
         circle = plt.Circle((x, y), size, color=labels[label], fill=False)
         ax.add_patch(circle)
+    patches = [mpatches.Patch(color=labels[label],label=label) for label in labels]
     image = "../" + image
     img = mpimg.imread(image)
     plt.imshow(img,cmap='gray',vmin=0,vmax=255)
-    plt.savefig(output)
+    lgd = plt.legend(handles=patches, loc='lower left', borderaxespad=0., bbox_to_anchor=(1.1, 0))
+    plt.savefig(output, bbox_extra_artists=(lgd,), bbox_inches='tight')
 
 name="output/output"
 i=0
