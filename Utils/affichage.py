@@ -38,6 +38,7 @@ def show_image(image, output):
                     "sunken": 0,
                     "wrinkled": 0,
                     "non classé": 0}
+    total_circles = 0
     ax = plt.gca()
     ax.cla()
     for circle in range(len(data[image])):
@@ -48,9 +49,14 @@ def show_image(image, output):
         if label not in labels:
             label = "non classé"
         labels_count[label] += 1
+        total_circles += 1
         circle = plt.Circle((x, y), size, color=labels[label], fill=False)
         ax.add_patch(circle)
-    patches = [mpatches.Patch(color=labels[label],label=label+" - "+str(labels_count[label])) for label in labels_count]
+    patches = [mpatches.Patch(color=labels[label],label=label
+                              +" - "+str(labels_count[label])
+                              +" ("+str(round(labels_count[label]/total_circles*100, 2))+" %)")
+               for label in labels_count]
+    patches += [mpatches.Patch(color=[0,0,0],label="Total : "+str(total_circles))]
     image = "../" + image
     img = mpimg.imread(image)
     plt.imshow(img,cmap='gray',vmin=0,vmax=255)
