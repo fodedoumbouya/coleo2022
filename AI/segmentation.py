@@ -2,23 +2,26 @@ import cv2 as cv
 import numpy as np
 # import json
 # import sys
-import json
 
 
 # Use cage
-# import sys et donner le nom du ficher
-## segmentation(sys.argv[1:], "coleoi.jpg")
 
-def segmentation(argv, path):
-    default_file = path
-    # 'coleoi.jpg'
-    filename = argv[0] if len(argv) > 0 else default_file
-    src = cv.imread(cv.samples.findFile(filename), cv.IMREAD_COLOR)
+
+# going through the dict
+def segmentDict(dict):
+    for pathKey in list(dict.keys()):
+        dict[pathKey] = segmentation(path=pathKey)
+    return dict
+
+
+def segmentation(path):
+    # default_file = path
+    src = cv.imread(cv.samples.findFile(path), cv.IMREAD_COLOR)
     # Check if image is loaded fine
     if src is None:
         print('Error opening image!')
         print(
-            'Usage: hough_circle.py [image_name -- default ' + default_file + '] \n')
+            'Usage: hough_circle.py [image_name -- default ' + path + '] \n')
         return -1
 
     gray = cv.cvtColor(src, cv.COLOR_BGR2GRAY)
@@ -42,14 +45,14 @@ def segmentation(argv, path):
             mylist.append(model)
 
     # removing the extenstion i
-    lastName = path.split("/")
-    nameWithExt = lastName[len(lastName)-1]
-    index = nameWithExt.split(".")
-    name = index[0]
+    # lastName = path.split("/")
+    # nameWithExt = lastName[len(lastName)-1]
+    # index = nameWithExt.split(".")
+    # name = index[0]
 
-    p = "./data/"+name+".json"
+    # p = "./data/"+name+".json"
     # -creating the json
-    with open(p, "w",) as mon_fichier:
-        json.dump({path: mylist}, mon_fichier)
+    # with open(p, "w",) as mon_fichier:
+    #     json.dump({path: mylist}, mon_fichier)
 
-    return 0
+    return mylist
