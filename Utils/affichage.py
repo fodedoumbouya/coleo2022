@@ -6,7 +6,7 @@ import matplotlib.patches as mpatches
 import json
 
 json_path = 'trainingSet.json'
-plt.rcParams['figure.dpi'] = 1000
+plt.rcParams['figure.dpi'] = 800
 labels = {"autres": [238/255,59/255,59/255],
          "coleonica": [124/255,205/255,124/255],
          "faux": [255/255,255/255,0/255],
@@ -16,7 +16,7 @@ labels = {"autres": [238/255,59/255,59/255],
          "ringed": [255/255,110/255,180/255],
          "roundtip": [145/255,44/255,238/255],
          "sting": [238/255,121/255,66/255],
-         "sunken": [135/255,206/255,255/255],
+         "sunken": [0/255,0/255,255/255],
          "wrinkled": [255/255,131/255,250/255],
          "non classé": [0, 0, 0]}
 
@@ -26,6 +26,18 @@ with open(json_path, 'r') as f:
 #print(data)
 
 def show_image(image, output):
+    labels_count = {"autres": 0,
+                    "coleonica": 0,
+                    "faux": 0,
+                    "flat": 0,
+                    "placodea": 0,
+                    "pore": 0,
+                    "ringed": 0,
+                    "roundtip": 0,
+                    "sting": 0,
+                    "sunken": 0,
+                    "wrinkled": 0,
+                    "non classé": 0}
     ax = plt.gca()
     ax.cla()
     for circle in range(len(data[image])):
@@ -34,10 +46,11 @@ def show_image(image, output):
         size = data[image][circle]['coordinates'][2]
         label = data[image][circle]['label']
         if label not in labels:
-            label = "autres"
+            label = "non classé"
+        labels_count[label] += 1
         circle = plt.Circle((x, y), size, color=labels[label], fill=False)
         ax.add_patch(circle)
-    patches = [mpatches.Patch(color=labels[label],label=label) for label in labels]
+    patches = [mpatches.Patch(color=labels[label],label=label+" - "+str(labels_count[label])) for label in labels_count]
     image = "../" + image
     img = mpimg.imread(image)
     plt.imshow(img,cmap='gray',vmin=0,vmax=255)
