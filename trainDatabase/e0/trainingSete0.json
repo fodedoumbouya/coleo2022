@@ -1,5 +1,5 @@
 {
-    "Utils/dataset/Lower/1.bmp": [
+    "Lower/1.bmp": [
         {
             "coordinates": [
                 1346,
@@ -9685,7 +9685,7 @@
             "width": 48
         }
     ],
-    "Utils/dataset/Middle/1.bmp": [
+    "Middle/1.bmp": [
         {
             "coordinates": [
                 2088,
@@ -20289,7 +20289,7 @@
             "width": 34
         }
     ],
-    "Utils/dataset/Upper/1.bmp": [
+    "Upper/1.bmp": [
         {
             "coordinates": [
                 1968,

@@ -16,21 +16,25 @@ import numpy as np
 
 
 # going through the dict
-def segmentDict(dict):
-    for pathKey in list(dict.keys()):
-        dict[pathKey] = segmentation(path=pathKey)
-    return dict
+def segmentImageSet(imageSet,datadir="."):
+    outSet = {}
+    for pkey in imageSet.keys():
+        outSet[pkey] = segmentImage(pkey,datadir)
+    return outSet
 
 
-def segmentation(path):
+def segmentImage(imagePath,datadir="."):
+    
+
     # default_file = path
-    src = cv.imread(cv.samples.findFile(path), cv.IMREAD_COLOR)
+    src = cv.imread(datadir+imagePath, cv.IMREAD_COLOR)
     # Check if image is loaded fine
     if src is None:
         print('Error opening image!')
         print(
-            'Usage: hough_circle.py [image_name -- default ' + path + '] \n')
+            'Usage: hough_circle.py [image_name -- default ' + imagePath + '] \n')
         return -1
+
 
     gray = cv.cvtColor(src, cv.COLOR_BGR2GRAY)
     gray = cv.medianBlur(gray, 5)
@@ -43,24 +47,10 @@ def segmentation(path):
         circles = np.uint16(np.around(circles))
         for i in circles[0, :]:
             model = {
-                "coord": {
-                    "x": int(i[0]),
-                    "y": int(i[1]),
-                    "s": int(i[2])
-                },
+                "coordinates": [int(i[0]),int(i[1]), int(i[2])],
                 "label": ""
             }
             mylist.append(model)
 
-    # removing the extenstion i
-    # lastName = path.split("/")
-    # nameWithExt = lastName[len(lastName)-1]
-    # index = nameWithExt.split(".")
-    # name = index[0]
-
-    # p = "./data/"+name+".json"
-    # -creating the json
-    # with open(p, "w",) as mon_fichier:
-    #     json.dump({path: mylist}, mon_fichier)
-
     return mylist
+
