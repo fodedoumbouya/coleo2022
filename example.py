@@ -13,31 +13,41 @@ import src.train as train
 import json
 import numpy as np
 
-tdatadir="trainDatabase/e0/"
+traindatadir="trainDatabase/e0/"
+testdatadir="testDatabase/31CanomalusF/"
 
-inSet = json.load(open(tdatadir+"trainingSete0.json"))
+savedModelFileName = 'AI/trained_model.h5'
+
+inSet = json.load(open(traindatadir+"trainingSete0.json"))
 
 # plot image set
-drawIm.drawImageSet(inSet,receptors.labels,datadir=tdatadir, title="Observation ")
+drawIm.drawImageSet(inSet,receptors.labels,datadir=traindatadir, title="Observation ")
  
 # learn images
-model = train.learnLabelledSet(inSet,datadir=tdatadir)
+model = train.learnLabelledSet(inSet,datadir=traindatadir,model_v=2,nEpochs=45,flag_balanced=True)
 
 # save model
-model.save('AI/trained_model.h5')
+
+model.save(savedModelFileName)
+
+print("model saved at ",savedModelFileName)
 
 # reload model
 storedModel = train.loadImageLabeller('AI/trained_model.h5')
-
 # open activation set (empty)
-imageSet = json.load(open(tdatadir+"testSete0.json"))
-
+imageSet = json.load(open(traindatadir+"testSete0.json"))
 # find receptors
-segmentedSet = segmentation.segmentImageSet(imageSet,datadir=tdatadir)
-
+segmentedSet = segmentation.segmentImageSet(imageSet,datadir=traindatadir)
 # classify receptors
-outSet = train.classifyImageSet(segmentedSet,storedModel,receptors.labels,datadir=tdatadir)
-
+outSet = train.classifyImageSet(segmentedSet,storedModel,receptors.labels,datadir=traindatadir)
 # plot classified receptrs
-drawIm.drawImageSet(outSet,receptors.labels,datadir=tdatadir, title="Prediction ")
+drawIm.drawImageSet(outSet,receptors.labels,datadir=traindatadir, title="Prediction ")
+
+# on new dataset (never seen)
+testdatadir="testDatabase/"
+imageSet = json.load(open(testdatadir+"testSet.json"))
+segmentedSet = segmentation.segmentImageSet(imageSet,datadir=testdatadir)
+outSet = train.classifyImageSet(segmentedSet,storedModel,receptors.labels,datadir=testdatadir)
+drawIm.drawImageSet(outSet,receptors.labels,datadir=testdatadir, title="Prediction ")
    
+

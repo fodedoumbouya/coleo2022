@@ -11,6 +11,9 @@ import tensorflow as tf
 import cv2
 from tensorflow.keras import datasets, layers, models
 
+from sklearn.utils import class_weight
+
+
 def unison_shuffled_copies(a, b):
     assert len(a) == len(b)
     p = np.random.permutation(len(a))
@@ -18,8 +21,7 @@ def unison_shuffled_copies(a, b):
 
 
 
-
-def learnLabelledSet(train_dict,datadir="."):
+def learnLabelledSet(train_dict,datadir=".",model_v=1,nEpochs=20,flag_balanced=False):
     class_names=[]
  
 
@@ -42,7 +44,7 @@ def learnLabelledSet(train_dict,datadir="."):
 
     classes=list(np.unique(class_names))
 
-
+    num_classes = len(classes)
 
     for key in list(train_dict.keys()):
         dataImg = cv2.imread(datadir+key, cv2.COLOR_BGR2GRAY)
@@ -73,25 +75,46 @@ def learnLabelledSet(train_dict,datadir="."):
     
     train_images=total_images[limS:]
     train_labels=total_labels[limS:]
+    
 
+    class_w  = {}
+    if (flag_balanced):
+        class_w = class_weight.compute_class_weight(class_weight='balanced',classes=np.unique(train_labels),y=train_labels)
+        class_w_d = dict(enumerate(class_w.flatten(), 0))
  #   train_images=total_images[:]
  #   train_labels=total_labels[:]
 
 
     for i in range(len(classes)):
         print(i, classes[i],list(total_labels).count(i))
-
-    model = tf.keras.Sequential([
-            tf.keras.layers.Flatten(input_shape=(imsize, imsize)),
-            tf.keras.layers.Dense(256, activation='relu'),
-            tf.keras.layers.Dense(len(classes)),
+   
+    if (model_v==1):
+            model = tf.keras.Sequential([
+              tf.keras.layers.Flatten(input_shape=(imsize, imsize)),
+              tf.keras.layers.Dense(256, activation='relu'),
+              tf.keras.layers.Dense(len(classes)),
             ])
+    if (model_v==2):
+             inputs = tf.keras.Input(shape = (imsize,imsize,1))
+             # x = data_augmentation(inputs)
+             x = tf.keras.layers.Rescaling(1.0 / 255)(inputs)
+             x= tf.keras.layers.Conv2D(32, 3, activation='relu')(x)
+             x = tf.keras.layers.MaxPooling2D()(x)
+             x = tf.keras.layers.Conv2D(32, 3, activation='relu')(x)
+             x = tf.keras.layers.MaxPooling2D()(x)
+             x = tf.keras.layers.Conv2D(64, 3, activation='relu')(x)
+             x =  tf.keras.layers.MaxPooling2D()(x)
+             x = tf.keras.layers.Flatten()(x)
+             x = tf.keras.layers.Dense(128, activation='relu')(x)
+             outputs = tf.keras.layers.Dense(num_classes,activation="softmax")(x) 
+             model = tf.keras.Model(inputs=inputs,outputs = outputs)
+                 
 
     model.compile(optimizer='adam',
-              loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
+              loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=False),
               metrics=['accuracy'])
 
-    model.fit(train_images, train_labels, epochs=3)
+    model.fit(train_images, train_labels, epochs=nEpochs,class_weight=class_w_d)
 
 
     loss, acc = model.evaluate(test_images, test_labels, verbose=2)
@@ -116,6 +139,7 @@ def learnLabelledSet(train_dict,datadir="."):
     return model
 
 
+
 def classifyImageSet(segmentedSet, model , labels, datadir="."):
     outSet = {}
     for pkey in segmentedSet.keys():
@@ -130,9 +154,9 @@ def classifyImage(recepList, model , labels, imagePath):
     class_names={}
     for key in list(labels.keys()):
         class_names[labels[key][0]] = key
-
+    print("model shape", model.layers[0].get_output_at(0).get_shape())
     imsize = int((np.sqrt(model.layers[0].get_output_at(0).get_shape()[-1])))
-    
+    imsize = 34
 
     #get nrecep and class and coords lists
     nrecep =len(recepList)
@@ -147,14 +171,15 @@ def classifyImage(recepList, model , labels, imagePath):
     dataImg = cv2.imread(imagePath, cv2.COLOR_BGR2GRAY)
     
  
-    
+    print(np.shape(dataImg))
     for receptor in recepList:
         x,y,rd = receptor["coordinates"]
         r=int(imsize/2)
         x=int(x)
         y=int(y)
         rd=int(rd)
-        read_images[imcount,:,:]=dataImg[y-r:y+r,x-r:x+r]
+        print(r,x,y)
+        read_images[imcount,:,:]= dataImg[y-r:y+r,x-r:x+r]
         imcount = imcount+1
 
   
