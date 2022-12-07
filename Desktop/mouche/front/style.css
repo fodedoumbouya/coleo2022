@@ -1,10 +1,43 @@
+
+
 section 
 {
+    margin: auto;
     display: flex;
     flex-direction: column;
+    width: 90%;
+    height: 800px;
+    border : solid black 2px;
+    background-color: aqua;
 }
+.image 
+{
+    height: 400px;
+    background-color:rgb(213, 202, 223);
+    border : solid 2px black;
+    align-items: center;
+}
+img 
+{
+    height : 250px;
+    width : 250px;
+}
+
 .bas-image 
 {
     display: flex;
     flex-direction: row;
+}
+.zoom-image 
+{
+    border : black 2px solid ;
+}
+button {
+    width : 90px ;
+    align-self: center;
+    margin-bottom: 25px;
+}
+input {
+    align-self: center;
+    margin: 30px 0;
 }
