@@ -1,7 +1,4 @@
 # -*- coding: utf-8 -*-
-import json
-import coleolabels as receptors
-
 def file_report(dataset, labels, fileNamePrefix):
     total_labels_set = {}
     total_circles_set = 0
@@ -39,7 +36,3 @@ def report_data(data, labels, fileNamePrefix):
         labels_count[label] += 1
         total_circles += 1
     return labels_count, total_circles
-
-traindatadir="../trainDatabase/e0/"
-inSet = json.load(open(traindatadir+"trainingSete0.json"))
-file_report(inSet, receptors.labels, "report")
