@@ -17,7 +17,7 @@ traindatadir="trainDatabase/e0/"
 testdatadir="testDatabase/31CanomalusF/"
 
 savedModelFileName = 'AI/trained_model.h5'
-
+'''
 inSet = json.load(open(traindatadir+"trainingSete0.json"))
 
 # plot image set
@@ -31,7 +31,7 @@ model = train.learnLabelledSet(inSet,datadir=traindatadir,model_v=2,nEpochs=45,f
 model.save(savedModelFileName)
 
 print("model saved at ",savedModelFileName)
-
+'''
 # reload model
 storedModel = train.loadImageLabeller('AI/trained_model.h5')
 # open activation set (empty)
