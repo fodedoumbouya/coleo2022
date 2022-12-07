@@ -58,16 +58,19 @@ function generateClass(){
             element.addEventListener("click", (e)=>{
                 $(".image-item").css("border-color","black")
                 allClass[index].style.borderColor  ="red"
-                updatePoint(JSON.parse(localStorage.getItem("clicked-point")));
+                updatePoint(JSON.parse(localStorage.getItem("clicked-point")),allClass[index],id);
             })
         }
     }
 }
 
-function updatePoint(info_point){
+function updatePoint(coordinates=[],label=""){
    let infos= JSON.parse(localStorage.getItem("infos"));
-   if(info_point.hasOwnProperty("coordinates")){
-        infos[info_point.coordinates.join("-")]=info_point
+   if(coordinates.length>0){
+        infos[coordinates.join("-")]={
+            coordinates:coordinates,
+            label:label
+        }
         infos=JSON.stringify(infos)
         localStorage.setItem("infos", infos);
    }
