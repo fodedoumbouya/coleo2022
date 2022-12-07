@@ -186,7 +186,7 @@ def classifyImage(recepList, model , labels, imagePath):
     
     print("predictions shape:", predictions.shape, read_labels.shape)
     
-    threshold=0.8
+    threshold=0.9
     
     for i,receptor in enumerate(recepList):
         receptor["label"] = class_names[np.argmax(predictions[i])]

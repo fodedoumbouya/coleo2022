@@ -37,14 +37,15 @@ def show_image_wihtout_null_false(data, imfFile, labels, outfilename=None , figu
     for circle in range(len(data)):
         x = data[circle]['coordinates'][0]
         y = data[circle]['coordinates'][1]
-        size = data[circle]['coordinates'][2]
+      #  size = data[circle]['coordinates'][2]
+        size = 1
         label = data[circle]['label']
         if label not in labels:
             label = "non classé"
         if not label == "" and not label == "faux":
             labels_count[label] += 1
             total_circles += 1
-            circle = plt.Circle((x, y), size, color=labels[label][1], linewidth=0.3,fill=False)
+            circle = plt.Circle((x, y), size, color=labels[label][1])
             ax.add_patch(circle)
 
     patches = [mpatches.Patch(color=labels[label][1],label=label
