@@ -11,6 +11,7 @@ import src.affichage as drawIm
 
 import src.segmentation as segmentation
 import src.train as train
+import src.report as report
 import json
 import numpy as np
 
@@ -18,6 +19,7 @@ traindatadir="trainDatabase/e0/"
 testdatadir="testDatabase/31CanomalusF/"
 
 savedModelFileName = 'AI/trained_model.h5'
+
 
 inSet = json.load(open(traindatadir+"trainingSete0.json"))
 
@@ -33,6 +35,7 @@ model.save(savedModelFileName)
 
 print("model saved at ",savedModelFileName)
 
+
 # reload model
 storedModel = train.loadImageLabeller('AI/trained_model.h5')
 # open activation set (empty)
@@ -44,11 +47,13 @@ outSet = train.classifyImageSet(segmentedSet,storedModel,receptors.labels,datadi
 # plot classified receptrs
 drawIm.drawImageSet(outSet,receptors.labels,datadir=traindatadir, title="Prediction ")
 
+# save text report
+report.file_report(inSet, receptors.labels, "report")
+
 # on new dataset (never seen)
 testdatadir="testDatabase/"
 imageSet = json.load(open(testdatadir+"testSet.json"))
 segmentedSet = segmentation.segmentImageSet(imageSet,datadir=testdatadir)
 outSet = train.classifyImageSet(segmentedSet,storedModel,receptors.labels,datadir=testdatadir)
 drawIm.drawImageSet(outSet,receptors.labels,datadir=testdatadir, title="Prediction ")
-   
 
