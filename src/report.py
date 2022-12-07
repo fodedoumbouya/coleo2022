@@ -3,16 +3,28 @@ import json
 import coleolabels as receptors
 
 def file_report(dataset, labels, fileNamePrefix):
-    file = open(fileNamePrefix+'.txt', 'w')
+    total_labels_set = {}
+    total_circles_set = 0
+    total_stats = ''
+    for key in labels:
+        total_labels_set[key] = 0
     
+    file = open(fileNamePrefix+'.md', 'w')
     for i,pkey in enumerate(dataset.keys()):
         stats = ''
         labels_count, total = report_data(dataset[pkey], labels, fileNamePrefix)
         for label in labels_count:
-            stats += f'{label}: {labels_count[label]} ' + \
-                f'({round(labels_count[label]/total*100, 2)}%)\n'
-        file.write(f'--------------------\n{pkey}:\n{stats}Total: {total}\n\n')
-
+            label_nb = labels_count[label]
+            total_labels_set[label] += label_nb
+            stats += f'* {label}: **{label_nb}** ' + \
+                f'*({round(label_nb/total*100, 2)}%)*\n'
+        file.write(f'### {pkey}\n{stats}**Total: {total}**\n\n')
+        total_circles_set += total
+    for label in total_labels_set:
+        label_nb = total_labels_set[label]
+        total_stats += f'* {label}: **{label_nb}** ' + \
+            f'*({round(label_nb/total_circles_set*100, 2)}%)*\n'
+    file.write(f'### Total\n{total_stats}**Total: {total_circles_set}**')
     file.close()
 
 def report_data(data, labels, fileNamePrefix):
