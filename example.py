@@ -47,9 +47,6 @@ outSet = train.classifyImageSet(segmentedSet,storedModel,receptors.labels,datadi
 # plot classified receptrs
 drawIm.drawImageSet(outSet,receptors.labels,datadir=traindatadir, title="Prediction ")
 
-# save text report
-report.file_report(inSet, receptors.labels, reportFileName)
-
 # on new dataset (never seen)
 testdatadir="testDatabase/"
 imageSet = json.load(open(testdatadir+"testSet.json"))
@@ -57,3 +54,6 @@ segmentedSet = segmentation.segmentImageSet(imageSet,datadir=testdatadir)
 outSet = train.classifyImageSet(segmentedSet,storedModel,receptors.labels,datadir=testdatadir)
 drawIm.drawImageSet(outSet,receptors.labels,datadir=testdatadir, title="Prediction ")
 
+# save text report
+report.file_report(inSet, receptors.labels, f'{reportFileName}_in', dataset_dir=traindatadir)
+report.file_report(outSet, receptors.labels, f'{reportFileName}_out', dataset_dir=testdatadir)

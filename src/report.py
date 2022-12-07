@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
-def file_report(dataset, labels, fileNamePrefix):
+def file_report(dataset, labels, fileNamePrefix, dataset_dir=None):
+    datadir = ''
+    if dataset_dir is not None :
+        datadir = dataset_dir
+        
     total_labels_set = {}
     total_circles_set = 0
     total_stats = ''
@@ -15,7 +19,8 @@ def file_report(dataset, labels, fileNamePrefix):
             total_labels_set[label] += label_nb
             stats += f'* {label}: **{label_nb}** ' + \
                 f'*({round(label_nb/total*100, 2)}%)*\n'
-        file.write(f'### {pkey}\n{stats}**Total: {total}**\n\n')
+        file.write(f'### {pkey}\n![{pkey}]({datadir}{pkey})' + \
+                   f'\n{stats}**Total: {total}**\n\n')
         total_circles_set += total
     for label in total_labels_set:
         label_nb = total_labels_set[label]
