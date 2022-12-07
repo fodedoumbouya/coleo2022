@@ -1,5 +1,6 @@
 # coleo2022 Projet 
-
+#docs des states
+https://docs.google.com/document/d/19kR98SqvE0cwz3iWfeSNihppsLIBNE5RLBy2XleeGZI/edit?usp=sharing
 ## Repo Source 
 * Lien du code pour l'ancien code: https://github.com/clementlha/PRJT_Coleoptere/
 # Téléchargement 
