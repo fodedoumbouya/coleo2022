@@ -1,0 +1,40 @@
+.image-container {
+  display: grid;
+  grid-template-columns: auto;
+  padding: 10px;
+}
+
+.image-item {
+  background-color: rgba(255, 255, 255, 0.8);
+  border: 3px solid rgba(0, 0, 0, 0.8);
+  padding: 20px;
+  font-size: 30px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.zoomImgDiv { grid-area: zoom; }
+
+.selectClassDiv { 
+  grid-area: classes; 
+  height: 30%;
+}
+
+.imgDiv { grid-area: images; }
+
+.body-container {
+  display: grid;
+  grid-template-areas:
+    'images images images images images'
+    'zoom zoom zoom classes classes';
+  gap: 5px;
+  background-color: #dce3e8;
+  padding: 10px;
+}
+
+.body-container > div {
+  background-color: rgba(255, 255, 255, 0.8);
+  text-align: center;
+  padding: 20px 0;
+  font-size: 30px;
+}
