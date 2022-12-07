@@ -19,8 +19,8 @@ import json
 def segmentImageSet(imageSet,datadir="."):
     outSet = {}
     for pkey in imageSet.keys():
-        outSet[pkey] = segmentBruteForce(pkey,datadir)
-        #outSet[pkey] = segmentImage(pkey,datadir)
+        #outSet[pkey] = segmentBruteForce(pkey,datadir)
+        outSet[pkey] = segmentImage(pkey,datadir)
     return outSet
 
 

@@ -10,6 +10,8 @@ import numpy as np
 import tensorflow as tf
 import cv2
 from tensorflow.keras import datasets, layers, models
+import matplotlib.pyplot as plt
+import json
 
 from sklearn.utils import class_weight
 
@@ -19,6 +21,7 @@ def unison_shuffled_copies(a, b):
     p = np.random.permutation(len(a))
     return a[p], b[p]
 
+perfs_list=dict()
 
 
 def learnLabelledSet(train_dict,datadir=".",model_v=1,nEpochs=20,flag_balanced=False):
@@ -113,11 +116,24 @@ def learnLabelledSet(train_dict,datadir=".",model_v=1,nEpochs=20,flag_balanced=F
     model.compile(optimizer='adam',
               loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=False),
               metrics=['accuracy'])
+              
 
-    model.fit(train_images, train_labels, epochs=nEpochs,class_weight=class_w_d)
-
-
+    history=model.fit(train_images, train_labels, epochs=nEpochs,class_weight=class_w_d)
+    
+    perfs_list['epochs']=nEpochs
+    perfs_list['model_version']=model_v
+    perfs_list['loss_vector']=[history.epoch,history.history['loss']]
+    
+    #plot loss v epochs
+    plt.plot(history.epoch, history.history["loss"], 'g', label='Training loss')
+    plt.title('Training loss')
+    plt.xlabel('Epochs')
+    plt.ylabel('Loss')
+    plt.legend()
+    plt.show()
+    
     loss, acc = model.evaluate(test_images, test_labels, verbose=2)
+    
 
 
 
@@ -130,11 +146,16 @@ def learnLabelledSet(train_dict,datadir=".",model_v=1,nEpochs=20,flag_balanced=F
         predictCounted[i] = np.argmax(predictions[i])
 
     # perfromance par classe
+    
     for i in range(len(classes)):
         print(i, classes[i], "obs:",list(test_labels).count(i),"   pred:",list(predictCounted).count(i))
-
+        sub_dict={"obs": list(test_labels).count(i), "pred": list(predictCounted).count(i)}
+        perfs_list[classes[i]]=sub_dict
 
     print("Restored model, accuracy: {:5.2f}%".format(100 * acc))
+    
+    with open("model_perfs.json", "w") as outfile:
+        json.dump(perfs_list, outfile)
 
     return model
 
@@ -148,6 +169,7 @@ def classifyImageSet(segmentedSet, model , labels, datadir="."):
 
 def classifyImage(recepList, model , labels, imagePath):
     
+    threshold=0.8
     class_names=labels
    
     nrecep=0
@@ -186,7 +208,9 @@ def classifyImage(recepList, model , labels, imagePath):
     
     print("predictions shape:", predictions.shape, read_labels.shape)
     
+
     threshold=0.9
+
     
     for i,receptor in enumerate(recepList):
         receptor["label"] = class_names[np.argmax(predictions[i])]
