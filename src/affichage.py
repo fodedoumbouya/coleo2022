@@ -19,14 +19,14 @@ def drawImageSet(dataset,labels,fileNamePrefix=None,datadir=".", title="Figure")
         fileName = None
         print("plotting ", datadir+pkey)
         if fileNamePrefix is not None:
-           fileName = "%s%i.png"%(fileNamePprefix,i)
+           fileName = "%s%i.png"%(fileNamePrefix,i)
         show_image(dataset[pkey],datadir+pkey,labels,outfilename=fileName,figureNumber=i, title=title)
 
 
 def show_image(data, imfFile, labels, outfilename=None , figureNumber = 0, title="Figure"):
  
   
-    plt.rcParams['figure.dpi'] = 200
+    plt.rcParams['figure.dpi'] = 100
     labels_count = {}
     for key in labels:
         labels_count[key] = 0
@@ -57,6 +57,6 @@ def show_image(data, imfFile, labels, outfilename=None , figureNumber = 0, title
     lgd = plt.legend(handles=patches, loc='lower left', borderaxespad=0., bbox_to_anchor=(1.1, 0))  
     
     plt.title("%s %d"%(title,figureNumber))
-    plt.show()
     if outfilename is not None :
         plt.savefig(outfilename, bbox_extra_artists=(lgd,), bbox_inches='tight')
+    plt.show()

@@ -178,7 +178,6 @@ def classifyImage(recepList, model , labels, imagePath):
         x=int(x)
         y=int(y)
         rd=int(rd)
-        print(r,x,y)
         read_images[imcount,:,:]= dataImg[y-r:y+r,x-r:x+r]
         imcount = imcount+1
 
@@ -186,12 +185,16 @@ def classifyImage(recepList, model , labels, imagePath):
     predictions = model.predict(read_images)
     
     print("predictions shape:", predictions.shape, read_labels.shape)
- 
+    
+    threshold=0.8
+    
     for i,receptor in enumerate(recepList):
         receptor["label"] = class_names[np.argmax(predictions[i])]
         read_labels[i] = np.argmax(predictions[i])
-        receptor["label"] = class_names[read_labels[i]]
-        
+        if(read_labels[i]>threshold):
+            receptor["label"] = class_names[read_labels[i]]
+        else:
+            receptor["label"] =""
 
     return recepList
     
