@@ -1,3 +1,5 @@
+localStorage.setItem("infos", "{}");
+localStorage.setItem("clicked-point", "{}");
 var classJson = [
     {
         "classe":"coleonica",
@@ -56,9 +58,19 @@ function generateClass(){
             element.addEventListener("click", (e)=>{
                 $(".image-item").css("border-color","black")
                 allClass[index].style.borderColor  ="red"
+                updatePoint(JSON.parse(localStorage.getItem("clicked-point")));
             })
         }
     }
+}
+
+function updatePoint(info_point){
+   let infos= JSON.parse(localStorage.getItem("infos"));
+   if(info_point.hasOwnProperty("coordinates")){
+        infos[info_point.coordinates.join("-")]=info_point
+        infos=JSON.stringify(infos)
+        localStorage.setItem("infos", infos);
+   }
 }
 
 generateClass()
