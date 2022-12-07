@@ -6,9 +6,12 @@ def file_report(dataset, labels, fileNamePrefix):
     file = open(fileNamePrefix+'.txt', 'w')
     
     for i,pkey in enumerate(dataset.keys()):
+        stats = ''
         labels_count, total = report_data(dataset[pkey], labels, fileNamePrefix)
-        stats = labels_count
-        file.write(f'{pkey}:\n{stats}\nTotal: {total}\n\n')
+        for label in labels_count:
+            stats += f'{label}: {labels_count[label]} ' + \
+                f'({round(labels_count[label]/total*100, 2)}%)\n'
+        file.write(f'--------------------\n{pkey}:\n{stats}Total: {total}\n\n')
 
     file.close()
 
