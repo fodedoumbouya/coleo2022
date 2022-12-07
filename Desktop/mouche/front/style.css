@@ -1,0 +1,10 @@
+section 
+{
+    display: flex;
+    flex-direction: column;
+}
+.bas-image 
+{
+    display: flex;
+    flex-direction: row;
+}
