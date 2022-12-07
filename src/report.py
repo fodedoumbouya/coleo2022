@@ -22,6 +22,7 @@ def file_report(dataset, labels, fileNamePrefix):
         total_stats += f'* {label}: **{label_nb}** ' + \
             f'*({round(label_nb/total_circles_set*100, 2)}%)*\n'
     file.write(f'### Total\n{total_stats}**Total: {total_circles_set}**')
+    print(f'Report saved at {fileNamePrefix}.md')
     file.close()
 
 def report_data(data, labels, fileNamePrefix):

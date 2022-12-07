@@ -19,7 +19,7 @@ traindatadir="trainDatabase/e0/"
 testdatadir="testDatabase/31CanomalusF/"
 
 savedModelFileName = 'AI/trained_model.h5'
-
+reportFileName = 'report'
 
 inSet = json.load(open(traindatadir+"trainingSete0.json"))
 
@@ -48,7 +48,7 @@ outSet = train.classifyImageSet(segmentedSet,storedModel,receptors.labels,datadi
 drawIm.drawImageSet(outSet,receptors.labels,datadir=traindatadir, title="Prediction ")
 
 # save text report
-report.file_report(inSet, receptors.labels, "report")
+report.file_report(inSet, receptors.labels, reportFileName)
 
 # on new dataset (never seen)
 testdatadir="testDatabase/"
